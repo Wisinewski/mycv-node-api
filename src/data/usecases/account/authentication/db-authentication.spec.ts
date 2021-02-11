@@ -24,4 +24,14 @@ describe('Name of the group', () => {
     })
     expect(loadAccountByEmailRepositorySpy.email).toBe('any_email')
   })
+
+  test('should throw if LoadAccountByEmailRepository throws', async () => {
+    const { sut, loadAccountByEmailRepositorySpy } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositorySpy, 'loadAccountByEmail').mockReturnValueOnce(Promise.reject(new Error()))
+    const promise = sut.auth({
+      email: 'any_email',
+      password: 'any_password'
+    })
+    expect(promise).rejects.toThrow()
+  })
 })
