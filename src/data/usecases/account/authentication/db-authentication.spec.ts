@@ -1,23 +1,5 @@
-import { LoadAccountByEmailRepositorySpy } from './../../../test/mock-load-account-by-email-repository'
+import { LoadAccountByEmailRepositorySpy } from '../../../test/mock-db-account'
 import { DbAuthentication } from './db-authentication'
-import { AccountModel } from '../../../../domain/models/account'
-import { LoadAccountByEmailRepository } from './../../../protocols/db/account/load-account-by-email-repository'
-
-const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepositorySpy => {
-  class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
-    email
-    async loadAccountByEmail (email: string): Promise<AccountModel> {
-      this.email = email
-      return {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email',
-        password: 'any_password'
-      }
-    }
-  }
-  return new LoadAccountByEmailRepositorySpy()
-}
 
 type SutTypes = {
   sut: DbAuthentication
@@ -25,7 +7,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByEmailRepositorySpy = mockLoadAccountByEmailRepository()
+  const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
   const sut = new DbAuthentication(loadAccountByEmailRepositorySpy)
   return {
     sut,
