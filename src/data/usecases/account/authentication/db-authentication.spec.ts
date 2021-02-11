@@ -1,5 +1,11 @@
+import { AuthenticationParams } from './../../../../domain/usecases/account/authentication'
 import { LoadAccountByEmailRepositorySpy } from '../../../test/mock-db-account'
 import { DbAuthentication } from './db-authentication'
+
+const mockAuthenticationParams = (): AuthenticationParams => ({
+  email: 'any_email',
+  password: 'any_password'
+})
 
 type SutTypes = {
   sut: DbAuthentication
@@ -18,20 +24,14 @@ const makeSut = (): SutTypes => {
 describe('Name of the group', () => {
   test('should call LoadAccountByEmailRepository with correct values', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    await sut.auth({
-      email: 'any_email',
-      password: 'any_password'
-    })
+    await sut.auth(mockAuthenticationParams())
     expect(loadAccountByEmailRepositorySpy.email).toBe('any_email')
   })
 
   test('should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     jest.spyOn(loadAccountByEmailRepositorySpy, 'loadAccountByEmail').mockReturnValueOnce(Promise.reject(new Error()))
-    const promise = sut.auth({
-      email: 'any_email',
-      password: 'any_password'
-    })
+    const promise = sut.auth(mockAuthenticationParams())
     expect(promise).rejects.toThrow()
   })
 })
