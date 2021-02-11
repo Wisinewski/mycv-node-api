@@ -1,11 +1,6 @@
-import { AuthenticationParams } from './../../../../domain/usecases/account/authentication'
+import { mockAuthenticationParams } from './../../../../domain/test/mock-account'
 import { LoadAccountByEmailRepositorySpy } from '../../../test/mock-db-account'
 import { DbAuthentication } from './db-authentication'
-
-const mockAuthenticationParams = (): AuthenticationParams => ({
-  email: 'any_email',
-  password: 'any_password'
-})
 
 type SutTypes = {
   sut: DbAuthentication
