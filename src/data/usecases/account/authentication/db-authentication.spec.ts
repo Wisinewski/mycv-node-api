@@ -48,4 +48,11 @@ describe('Name of the group', () => {
     expect(hashComparerSpy.plainText).toBe('any_password')
     expect(hashComparerSpy.digest).toBe('hashed_password')
   })
+
+  test('should throw if HashComparer throws', async () => {
+    const { sut, hashComparerSpy } = makeSut()
+    jest.spyOn(hashComparerSpy, 'compare').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthenticationParams())
+    expect(promise).rejects.toThrow()
+  })
 })
