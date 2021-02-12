@@ -29,4 +29,11 @@ describe('Name of the group', () => {
     const promise = sut.auth(mockAuthenticationParams())
     expect(promise).rejects.toThrow()
   })
+
+  test('should return null if LoadAccountByEmailRepository returns null', async () => {
+    const { sut, loadAccountByEmailRepositorySpy } = makeSut()
+    loadAccountByEmailRepositorySpy.result = null
+    const accessToken = await sut.auth(mockAuthenticationParams())
+    expect(accessToken).toBeNull()
+  })
 })

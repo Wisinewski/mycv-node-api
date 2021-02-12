@@ -4,6 +4,7 @@ import { LoadAccountByEmailRepository } from '../protocols/db/account/load-accou
 
 export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
   email
+  result
   async loadAccountByEmail (email: string): Promise<AccountModel> {
     this.email = email
     return mockAccountModel()
