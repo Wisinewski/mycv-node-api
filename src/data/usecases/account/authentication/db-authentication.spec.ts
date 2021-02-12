@@ -1,3 +1,4 @@
+import { throwError } from './../../../../domain/test/test-helper'
 import { mockAuthenticationParams } from './../../../../domain/test/mock-account'
 import { LoadAccountByEmailRepositorySpy } from '../../../test/mock-db-account'
 import { DbAuthentication } from './db-authentication'
@@ -25,7 +26,7 @@ describe('Name of the group', () => {
 
   test('should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositorySpy, 'loadAccountByEmail').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(loadAccountByEmailRepositorySpy, 'loadAccountByEmail').mockImplementationOnce(throwError)
     const promise = sut.auth(mockAuthenticationParams())
     expect(promise).rejects.toThrow()
   })
