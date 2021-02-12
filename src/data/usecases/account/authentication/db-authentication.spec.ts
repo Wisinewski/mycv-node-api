@@ -38,8 +38,8 @@ describe('Name of the group', () => {
   test('should return null if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     loadAccountByEmailRepositorySpy.result = null
-    const accessToken = await sut.auth(mockAuthenticationParams())
-    expect(accessToken).toBeNull()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBeNull()
   })
 
   test('should call HashComparer with correct values', async () => {
@@ -54,5 +54,12 @@ describe('Name of the group', () => {
     jest.spyOn(hashComparerSpy, 'compare').mockImplementationOnce(throwError)
     const promise = sut.auth(mockAuthenticationParams())
     expect(promise).rejects.toThrow()
+  })
+
+  test('should return null if HashComparer returns false', async () => {
+    const { sut, hashComparerSpy } = makeSut()
+    hashComparerSpy.result = false
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBeNull()
   })
 })
