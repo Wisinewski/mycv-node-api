@@ -1,3 +1,4 @@
+import { HashComparerSpy } from './../../../test/mock-cryptography'
 import { throwError } from './../../../../domain/test/test-helper'
 import { mockAuthenticationParams } from './../../../../domain/test/mock-account'
 import { LoadAccountByEmailRepositorySpy } from '../../../test/mock-db-account'
@@ -6,19 +7,22 @@ import { DbAuthentication } from './db-authentication'
 type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositorySpy: LoadAccountByEmailRepositorySpy
+  hashComparerSpy: HashComparerSpy
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositorySpy = new LoadAccountByEmailRepositorySpy()
-  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy)
+  const hashComparerSpy = new HashComparerSpy()
+  const sut = new DbAuthentication(loadAccountByEmailRepositorySpy, hashComparerSpy)
   return {
     sut,
-    loadAccountByEmailRepositorySpy
+    loadAccountByEmailRepositorySpy,
+    hashComparerSpy
   }
 }
 
 describe('Name of the group', () => {
-  test('should call LoadAccountByEmailRepository with correct values', async () => {
+  test('should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepositorySpy } = makeSut()
     await sut.auth(mockAuthenticationParams())
     expect(loadAccountByEmailRepositorySpy.email).toBe('any_email')
@@ -36,5 +40,12 @@ describe('Name of the group', () => {
     loadAccountByEmailRepositorySpy.result = null
     const accessToken = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBeNull()
+  })
+
+  test('should call HashComparer with correct values', async () => {
+    const { sut, hashComparerSpy } = makeSut()
+    await sut.auth(mockAuthenticationParams())
+    expect(hashComparerSpy.plainText).toBe('any_password')
+    expect(hashComparerSpy.digest).toBe('hashed_password')
   })
 })
