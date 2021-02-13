@@ -71,4 +71,11 @@ describe('Name of the group', () => {
     await sut.auth(mockAuthenticationParams())
     expect(encrypterSpy.plaintext).toBe('any_id')
   })
+
+  test('should throw if Encrypter throws', async () => {
+    const { sut, encrypterSpy } = makeSut()
+    jest.spyOn(encrypterSpy, 'encrypt').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthenticationParams())
+    expect(promise).rejects.toThrow()
+  })
 })
