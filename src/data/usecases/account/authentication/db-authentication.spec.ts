@@ -89,4 +89,11 @@ describe('Name of the group', () => {
     expect(updateAccessTokenRepositorySpy.id).toBe('any_id')
     expect(updateAccessTokenRepositorySpy.accessToken).toBe('encrypted_plaintext')
   })
+
+  test('should throw if UpdateAccessTokenRepository throws', async () => {
+    const { sut, updateAccessTokenRepositorySpy } = makeSut()
+    jest.spyOn(updateAccessTokenRepositorySpy, 'updateAccessToken').mockImplementationOnce(throwError)
+    const promise = sut.auth(mockAuthenticationParams())
+    expect(promise).rejects.toThrow()
+  })
 })
