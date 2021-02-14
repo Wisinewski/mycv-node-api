@@ -96,4 +96,10 @@ describe('Name of the group', () => {
     const promise = sut.auth(mockAuthenticationParams())
     expect(promise).rejects.toThrow()
   })
+
+  test('should return accessToken on success', async () => {
+    const { sut } = makeSut()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBe('encrypted_plaintext')
+  })
 })
