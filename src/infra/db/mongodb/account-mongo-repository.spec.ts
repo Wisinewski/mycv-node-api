@@ -33,5 +33,11 @@ describe('AccountMongoRepository', () => {
       const account = await sut.loadAccountByEmail(addAccountParams.email)
       expect(account).toBeTruthy()
     })
+
+    test('should return null on fails', async () => {
+      const sut = makeSut()
+      const account = await sut.loadAccountByEmail('unregistered_email')
+      expect(account).toBeFalsy()
+    })
   })
 })
