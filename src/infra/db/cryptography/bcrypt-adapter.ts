@@ -7,6 +7,6 @@ export class BcryptAdapter implements HashComparer {
     if (isValid) {
       return true
     }
-    return null
+    return false
   }
 }
