@@ -3,7 +3,10 @@ import bcrypt from 'bcrypt'
 
 export class BcryptAdapter implements HashComparer {
   async compare (plainText: string, digest: string): Promise<boolean> {
-    bcrypt.compare(plainText, digest)
+    const isValid = await bcrypt.compare(plainText, digest)
+    if (isValid) {
+      return true
+    }
     return null
   }
 }
