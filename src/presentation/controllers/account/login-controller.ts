@@ -1,3 +1,4 @@
+import { serverError } from '../../helpers/http-helper'
 import { Authentication } from './../../../domain/usecases/account/authentication'
 import { Controller } from './../../protocols/controller'
 import { HttpResponse } from './../../protocols/http'
@@ -8,7 +9,11 @@ export class LoginController implements Controller {
   ) {}
 
   async handle (request: any): Promise<HttpResponse> {
-    await this.authentication.auth(request)
-    return null
+    try {
+      await this.authentication.auth(request)
+      return null
+    } catch (error) {
+      return serverError(error)
+    }
   }
 }
