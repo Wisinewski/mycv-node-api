@@ -15,7 +15,7 @@ export class HashComparerSpy implements HashComparer {
 export class EncrypterSpy implements Encrypter {
   plaintext: string
   result: string = 'encrypted_plaintext'
-  encrypt (plaintext: string): string {
+  async encrypt (plaintext: string): Promise<string> {
     this.plaintext = plaintext
     return this.result
   }
