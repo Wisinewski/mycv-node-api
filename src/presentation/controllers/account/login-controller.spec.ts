@@ -1,3 +1,4 @@
+import { unauthorized } from './../../helpers/http-helper'
 import { throwError } from './../../../domain/test/test-helper'
 import { LoginController } from './login-controller'
 import { AuthenticationSpy } from './../../test/account/mock-account'
@@ -31,5 +32,13 @@ describe('Login Controller', () => {
     jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(mockAuthenticationParams())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should return 401 if invalid credentials are provided', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(null)
+    const httpRequest = mockAuthenticationParams()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
