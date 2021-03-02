@@ -1,9 +1,8 @@
-import { unauthorized } from './../../helpers/http-helper'
+import { unauthorized, ok, serverError } from './../../helpers/http-helper'
 import { throwError } from './../../../domain/test/test-helper'
 import { LoginController } from './login-controller'
 import { AuthenticationSpy } from './../../test/account/mock-account'
 import { mockAuthenticationParams } from './../../../domain/test/mock-account'
-import { serverError } from '../../helpers/http-helper'
 
 type SutTypes = {
   authenticationSpy: AuthenticationSpy
@@ -40,5 +39,12 @@ describe('Login Controller', () => {
     const httpRequest = mockAuthenticationParams()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  test('should return 200 if valid credentials are provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = mockAuthenticationParams()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
 })
