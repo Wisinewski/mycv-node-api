@@ -1,3 +1,4 @@
+import { ValidationSpy } from './../../test/validation/mock-validation'
 import { unauthorized, ok, serverError } from './../../helpers/http-helper'
 import { throwError } from './../../../domain/test/test-helper'
 import { LoginController } from './login-controller'
@@ -5,16 +6,19 @@ import { AuthenticationSpy } from './../../test/account/mock-account'
 import { mockAuthenticationParams } from './../../../domain/test/mock-account'
 
 type SutTypes = {
-  authenticationSpy: AuthenticationSpy
   sut: LoginController
+  authenticationSpy: AuthenticationSpy
+  validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
   const authenticationSpy = new AuthenticationSpy()
-  const sut = new LoginController(authenticationSpy)
+  const validationSpy = new ValidationSpy()
+  const sut = new LoginController(authenticationSpy, validationSpy)
   return {
     sut,
-    authenticationSpy
+    authenticationSpy,
+    validationSpy
   }
 }
 
@@ -46,5 +50,13 @@ describe('Login Controller', () => {
     const httpRequest = mockAuthenticationParams()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+  })
+
+  test('should call Validation with correct values', async () => {
+    const { sut, validationSpy } = makeSut()
+    const validateSpy = jest.spyOn(validationSpy, 'validate')
+    const httpRequest = mockAuthenticationParams()
+    await sut.handle(httpRequest)
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest)
   })
 })
